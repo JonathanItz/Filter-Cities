@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>CITIES</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
     <style media="screen">
 
@@ -68,12 +69,32 @@
         float: right;
         padding: 0 10px;
       }
+      .up {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        background: #333;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ffc600;
+        font-size: 33px;
+        margin-right: 25px;
+        margin-bottom: 25px;
+        cursor: pointer;
+        text-decoration: none;
+        transition-duration: .3s;
+      }
+
 
     </style>
 
   </head>
   <body>
-
+    <div id="top"></div>
     <div class="container">
       <div class="stuff">
         <form class="form">
@@ -86,6 +107,8 @@
       </div>
     </div>
 
+    <a href="#top" class="up" style="opacity:0;"><i class="far fa-arrow-alt-circle-up"></i></a>
+
 
     <script type="text/javascript">
 
@@ -93,6 +116,7 @@
       const cities = []
       const input = document.querySelector('.input')
       const list = document.querySelector('.list')
+      const up = document.querySelector('.up')
 
       fetch(endpoint)
         .then(res => res.json())
@@ -123,6 +147,16 @@
       }
 
       input.addEventListener('keyup', outputMatches)
+
+
+
+      window.addEventListener('scroll', (e) => {
+        if(Math.floor(this.scrollY) !== 0) {
+          up.setAttribute('style', 'opacity:1;')
+        } else {
+          up.setAttribute('style', 'opacity:0;')
+        }
+      })
 
 
     </script>
