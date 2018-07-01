@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>CITIES</title>
+
+    <style media="screen">
+
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: arial;
+      }
+      body {
+        background-color: #ffc600;
+        height: 100%;
+      }
+      .container {
+        height: 100%;
+        width: 100%;
+        transform: translateY(15vh);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .stuff {
+        width: 100%;
+        min-height: auto;
+      }
+      .input {
+        width: 400px;
+        height: 50px;
+        font-size: 35px;
+        text-align: center;
+        color: #333;
+        border: 3px solid #f4f4f4;
+        border-radius: 3px;
+      }
+      form {
+        text-align: center;
+      }
+      .input:focus {
+        border: 3px solid #333;
+        outline: 0;
+      }
+      li {
+        width: 399px;
+        height: 50px;
+        background: #fff;
+        margin: auto;
+        list-style-type: none;
+        line-height: 50px;
+        background: linear-gradient(to top, #ffffff 0%,#EFEFEF 100%);
+        border-bottom: 1px solid #D8D8D8;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.14);
+      }
+      li:nth-of-type(odd) {
+        transform: perspective(100px) rotateX(-3deg) translateY(0);
+      }
+      li:nth-of-type(even) {
+        transform: perspective(100px) rotateX(3deg) translateY(-1px) scale(1.001);
+      }
+      .city {
+        text-align: left;
+        padding: 0 10px;
+      }
+      .population {
+        float: right;
+        padding: 0 10px;
+      }
+
+    </style>
+
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="stuff">
+        <form class="form">
+          <input type="text" class="input" placeholder="New York">
+        </form>
+        <ul class="list">
+          <li><span class="city">Filter for a city</span></li>
+          <li><span class="city">...or a state!!</span></li>
+        </ul>
+      </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+      const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json'
+      const cities = []
+      const input = document.querySelector('.input')
+      const list = document.querySelector('.list')
+
+      fetch(endpoint)
+        .then(res => res.json())
+        .then(data => cities.push(...data))
+
+      function filterMatches(matchedWithWord, cities) {
+        return cities.filter(place => {
+          const regex = new RegExp(matchedWithWord, 'gi')
+          return place.city.match(regex) || place.state.match(regex)
+        })
+      }
+
+      const numberWithCommas = (x) => {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function outputMatches() {
+        const matches = filterMatches(this.value, cities)
+        const html = matches.map(place => {
+          return `
+          <li>
+            <span class="city">${place.city}, ${place.state}</span>
+            <span class="population">${numberWithCommas(place.population)}</span>
+          </li>
+          `
+        }).join('')
+        list.innerHTML = html
+      }
+
+      input.addEventListener('keyup', outputMatches)
+
+
+    </script>
+  </body>
+</html>
